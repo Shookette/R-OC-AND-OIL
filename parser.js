@@ -1,12 +1,13 @@
-console.log('Prêt à récupérer les données'); 
+console.log('Prêt à récupérer les données');
+var oilData = [];
+var ocData = [];
+
 		function parser(data) {
 			console.log("Recherche des communes de type OC");
-			var oilData = [];
-			var ocData = [];
 			for(var commune in data) {
 
 				var nomCommune = data[commune][1];
-				var codePostal = data[commune][2]; 
+				var codePostal = data[commune][2];
 				var oilRegExp = /(ville$)/;
 				if(typeof nomCommune != 'undefined' && nomCommune.match(/(VILLE$)/)) {//&& nomCommune.indexOf("A") > -1 ) { //&& nomCommune.match()
 					oilData.push([nomCommune, codePostal, "FRANCE"]);
@@ -15,30 +16,32 @@ console.log('Prêt à récupérer les données');
 					ocData.push([nomCommune, codePostal, "FRANCE"]);
 				}
 			}
-			console.log(oilData);
+			addMarker(oilData);
+			addMarker(ocData);
+			// console.log(oilData);
 		}
-		
-		
+
+
 		var reader = new FileReader();
 
-		function findOcAndOil(that){ 
+		function findOcAndOil(that){
 
 			if(that.files && that.files[0]){
 				var reader = new FileReader();
-				reader.onload = function (e) {  
+				reader.onload = function (e) {
 					var output=e.target.result;
 					var data = CSVToArray(output, ";");
 					console.log("Voici vos données dans un tableau")
 					console.log(data);
-					parser(data);		
+					parser(data);
 				};//end onload()
 				reader.readAsText(that.files[0]);
-			
+
 			}
-		} 
-				
-		
-		
+		}
+
+
+
 	// ref: http://stackoverflow.com/a/1293163/2343
 		// This will parse a delimited string into an array of
 		// arrays. The default delimiter is the comma, but this
