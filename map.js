@@ -2,6 +2,7 @@ var geocoder;
 var map;
 var country = "France";
 
+console.log(oilData);
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -16,20 +17,32 @@ function initMap() {
         }
     });
 
-    var address = "LAVAL 53000 FRANCE";
+
+}
+
+function addMarker(data) {
     var myLatLng;
     var marker;
+    for(var i in data) {
+        geolocate(data, i);
+    }
+}
 
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            myLatLng = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
-            marker = new google.maps.Marker({
-              position: myLatLng,
-              map: map,
-              title: 'Hello World!'
-            });
-            marker.setMap(map)
-        }
-    });
-
+function geolocate(data, i) {
+    setTimeout(function(){
+        console.log(i);
+        var address = data[i][0] + " " + data[i][1] + " " + data[i][2];
+        geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                myLatLng = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
+                marker = new google.maps.Marker({
+                  position: myLatLng,
+                  map: map,
+                });
+                marker.setMap(map)
+            } else {
+                console.log(google.maps.GeocoderStatus);
+            }
+        });
+    }, 200);
 }
