@@ -1,28 +1,79 @@
-console.log('Prêt à récupérer les données');
-var oilData = [];
-var ocData = [];
 
-		function parser(data) {
-			console.log("Recherche des communes de type OC");
-			for(var commune in data) {
+var ocAdjectives = ["argues",
+	"an",
+	"aq",
+	"alde",
+	"abal",
+	"iaga",
+	"oz",
+	"oza",
+	"os",
+	"aspe",
+	"puy",
+	"ac",
+	"cast",
+	"cas",
+	"cazien",
+	"caz",
+	"bord",
+	"stier",
+	"kar",
+	"gar",
+	"cauna",
+	"lat",
+	"cost",
+	"roqu",
+	"penn",
+	"baux",
+	"bouc",
+	"aigues"];
 
-				var nomCommune = data[commune][1];
-				var codePostal = data[commune][2];
-				var oilRegExp = /(ville$)/;
-				if(typeof nomCommune != 'undefined' && nomCommune.match(/(VILLE$)/)) {//&& nomCommune.indexOf("A") > -1 ) { //&& nomCommune.match()
-					oilData.push([nomCommune, codePostal, "FRANCE"]);
-				}
-				else if(typeof nomCommune != 'undefined' && nomCommune.match(/(VILLE$)/)) {//&& nomCommune.indexOf("A") > -1 ) { //&& nomCommune.match()
-					ocData.push([nomCommune, codePostal, "FRANCE"]);
-				}
-			}
-			addMarker(oilData);
-			addMarker(ocData);
-			// console.log(oilData);
-		}
+var oilAdjectives = ["court",
+	"ay",
+	"é",
+	"ey",
+	"y",
+	"ez",
+	"ies",
+	"heim",
+	"hem",
+	"ham",
+	"ghem",
+	"ach",
+	"ich",
+	"ig",
+	"ange",
+	"anges",
+	"ingues",
+	"in",
+	"ines",
+	"ingue",
+	"angen",
+	"ang",
+	"ans",
+	"ens",
+	"eins",
+	"eins",
+	"iac",
+	"ker",
+	"trev",
+	"treb",
+	"treg",
+	"lann",
+	"land",
+	"loc",
+	"plou",
+	"igny",
+	"illy",
+	"ville",
+	"court",
+	"viller",
+	"willer",
+	"villers",
+	"villiers"];
 
-
-		var reader = new FileReader();
+var averageByDepartment = [];
+var reader = new FileReader();
 
 		function findOcAndOil(that){
 
@@ -31,14 +82,66 @@ var ocData = [];
 				reader.onload = function (e) {
 					var output=e.target.result;
 					var data = CSVToArray(output, ";");
-					console.log("Voici vos données dans un tableau")
-					console.log(data);
 					parser(data);
 				};//end onload()
 				reader.readAsText(that.files[0]);
-
 			}
 		}
+
+		function parser(data) {
+			var departments = [];
+			for(var commune in data) {
+
+				var nomCommune = data[commune][1];
+				var codePostal = data[commune][2];
+				var found = false;
+				if(typeof nomCommune != 'undefined') {
+
+					var department = codePostal.substr(0, 2);
+					if(!departments.hasOwnProperty(department)){
+						departments[department] = [];
+						departments[department]['oc'] = 0;
+						departments[department]['oil'] = 0;
+						departments[department]['neutre'] = 0;
+					}
+					for(var adj in oilAdjectives){
+						var reg = new RegExp("("+oilAdjectives[adj].toUpperCase()+'$)');
+						//console.log(reg);
+						if(nomCommune.match(reg) != null) {
+							departments[department]['oil']++;
+							found = true;
+							break;
+						}
+					}
+					if(!found) {
+						for(var adj in ocAdjectives){
+							//var reg = new RegExp('('+ocAdjectives[adj]+')');
+							if(nomCommune.indexOf(ocAdjectives[adj].toUpperCase()) != -1) {
+								departments[department]['oc']++;
+								found = true;
+								break;
+							}
+						}
+					}
+					if(!found) {
+						departments[department]['neutre']++;
+					}
+				}
+
+			}
+			averagingByDepartment(departments);
+		}
+
+		function averagingByDepartment(data) {
+			for(var department in data) {
+				var mean = (data[department]['oc'] - data[department]['oil']) / (data[department]['oc'] + data[department]['oil'] + data[department]['neutre']);
+				averageByDepartment[department] = mean;
+			}
+			console.log(averageByDepartment);
+		}
+
+
+
 
 
 

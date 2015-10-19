@@ -2,8 +2,6 @@ var geocoder;
 var map;
 var country = "France";
 
-console.log(oilData);
-
 function initMap() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
