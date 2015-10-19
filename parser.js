@@ -1,6 +1,6 @@
 console.log('Prêt à récupérer les données'); 
 		function parser(data) {
-			console.log("Recherche des communes de type OC")
+			console.log("Recherche des communes de type OC");
 			var oilData = [];
 			var ocData = [];
 			for(var commune in data) {
