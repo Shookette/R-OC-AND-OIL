@@ -125,16 +125,16 @@ function addCircle(dep, value) {
     var color;
 
     switch(true) {
-        case value > 0.5:
+        case value > 0.16:
             color = '#EB0000';
             break;
-        case value > 0 && value <= 0.5:
-            color = '#9C0D3F';
+        case value > 0 && value <= 0.16:
+            color = '#000000';
             break;
-        case value > -0.5 && value <= 0:
-            color = '#4E1A7F';
+        case value > -0.16 && value <= 0:
+            color = '#000000';
             break;
-        case value <= -0.5:
+        case value <= -0.16:
             color = '#0028BF';
             break;
 
@@ -150,6 +150,6 @@ function addCircle(dep, value) {
         fillOpacity: 0.35,
         map: map,
         center: latlng,
-        radius: 75000
+        radius: 50000
     });
 }
