@@ -144,10 +144,10 @@ function addCircle(dep, value) {
 
     var cityCircle = new google.maps.Circle({
         strokeColor: color,
-        strokeOpacity: 0.8,
+        strokeOpacity: 1,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.35,
+        fillOpacity: 0.7,
         map: map,
         center: latlng,
         radius: 50000
